@@ -4,11 +4,11 @@
     {
         static void Main()
         {
-            string path = "/app"; // Docker 컨테이너 내의 경로
+            string path = "/lbsemicon"; // Docker 컨테이너 내의 경로
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
-                Console.WriteLine($"Directory created at {path}");
+                Console.WriteLine($"Directory 생성 : {path}");
             }
             else
             {
@@ -16,11 +16,11 @@
                 Directory.Delete(path, true); // true parameter enables recursive deletion
             }
 
-            path = "/app/myfolder"; // Docker 컨테이너 내의 경로
+            path = "/lbsemicon/myfolder"; // Docker 컨테이너 내의 경로
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
-                Console.WriteLine($"Directory created at {path}");
+                Console.WriteLine($"Directory 생성 : {path}");
             }
             else
             {
