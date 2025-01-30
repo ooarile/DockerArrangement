@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:12-alpine  # PostgreSQL 데이터베이스 이미지
+    restart: unless-stopped    # 컨테이너가 중지되지 않도록 설정
+    environment:
+      POSTGRES_USER: mmuser    # 데이터베이스 사용자 이름
+      POSTGRES_PASSWORD: mmuser_password  # 데이터베이스 비밀번호
+      POSTGRES_DB: mattermost  # 생성할 데이터베이스 이름
+    volumes:
+      - db-volume:/var/lib/postgresql/data  # 데이터베이스 데이터를 저장할 볼륨
+
+  app:
+    image: mattermost/mattermost-team-edition:latest  # Mattermost 애플리케이션 이미지
+    restart: unless-stopped  # 컨테이너가 중지되지 않도록 설정
+    ports:
+      - "8065:8065"  # 호스트의 8065 포트를 컨테이너의 8065 포트에 매핑
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: postgres  # 데이터베이스 드라이버 설정
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:mmuser_password@db:5432/mattermost?sslmode=disable&connect_timeout=10  # 데이터베이스 연결 정보
+      MM_CONFIG: /mattermost/config/config.json  # Mattermost 설정 파일 경로
+    volumes:
+      - app-volume:/mattermost/data  # 애플리케이션 데이터를 저장할 볼륨
+    depends_on:
+      - db  # db 서비스가 먼저 시작되도록 설정
+
+volumes:
+  db-volume:  # PostgreSQL 데이터 저장을 위한 볼륨
+  app-volume:  # Mattermost 데이터 저장을 위한 볼륨
